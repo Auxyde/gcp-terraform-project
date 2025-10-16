@@ -1,7 +1,7 @@
 variable "project_id" {
   type        = string
   description = "ID du projet GCP à gérer"
-  default    = "InfraCloud"
+  default    = "infracloud-475109"
 }
 
 variable "region" {
