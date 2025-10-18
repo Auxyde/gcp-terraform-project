@@ -12,10 +12,10 @@ resource "google_compute_firewall" "bastion_ssh" {
 }
 
 resource "google_compute_firewall" "ssh_from_bastion" {
-  name         = "allow-ssh-from-bastion-to-private"
-  network      = google_compute_network.vpc_network.name
-  source_tags  = ["bastion"]
-  target_tags  = ["web"]
+  name          = "allow-ssh-from-bastion-to-private"
+  network       = google_compute_network.vpc_network.name
+  source_tags   = ["bastion"]
+  target_tags   = ["web"]
   allow { 
     protocol = "tcp"
     ports = ["22"] 
