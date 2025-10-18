@@ -3,6 +3,12 @@ resource "google_compute_instance" "web1" {
   machine_type = "e2-micro"
   zone         = var.zone
   tags        = ["web"]
+
+  allow_stopping_for_update = true
+
+  metadata = {
+    ssh-keys = "user:${file("~/.ssh/id_rsa.pub")}"
+  }
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
@@ -20,6 +26,12 @@ resource "google_compute_instance" "web2" {
   machine_type = "e2-micro"
   zone         = var.zone
   tags        = ["web"]
+
+  allow_stopping_for_update = true
+
+  metadata = {
+    ssh-keys = "user:${file("~/.ssh/id_rsa.pub")}"
+  }
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
@@ -36,6 +48,13 @@ resource "google_compute_instance" "bastion" {
   name         = "bastion"
   machine_type = "e2-micro"
   zone         = var.zone
+  tags = ["bastion"]
+
+  allow_stopping_for_update = true
+
+  metadata = {
+    ssh-keys = "user:${file("~/.ssh/id_rsa.pub")}"
+  }
 
   boot_disk {
     initialize_params {
@@ -48,11 +67,4 @@ resource "google_compute_instance" "bastion" {
     subnetwork = "public-subnet"
     access_config {} 
   }
-
-  allow_stopping_for_update = true
-
-  metadata = {
-    ssh-keys = "user:${file("~/.ssh/id_rsa.pub")}"
-  }
-  tags = ["bastion"]
 }
