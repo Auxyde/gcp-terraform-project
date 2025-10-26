@@ -76,22 +76,34 @@ resource "google_compute_instance" "bastion" {
   allow_stopping_for_update = true
 
   metadata = {
-    ssh-keys = "user:${file("~/.ssh/id_rsa.pub")}"
+    enable-oslogin = "FALSE"
   }
-
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
     }
   }
 
-  network_interface {
-    network    = "custom-vpc"
-    subnetwork = "public-subnet"
-    network_ip = "10.0.1.10"
-    access_config {} 
+  metadata_startup_script = <<-EOS
+    id -u webadmin &>/dev/null || adduser --disabled-password --gecos "" webadmin
+    usermod -aG sudo webadmin
+    echo 'webadmin:viveLeCloud123' | chpasswd
+
+    sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+    sudo sed -i 's/^#\?KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/' /etc/ssh/sshd_config
+    sudo sed -i 's/^#\?PermitEmptyPasswords.*/PermitEmptyPasswords no/' /etc/ssh/sshd_config
+
+    systemctl restart ssh
+
+  EOS
+
+    network_interface {
+      network    = "custom-vpc"
+      subnetwork = "public-subnet"
+      network_ip = "10.0.1.10"
+      access_config {} 
+    }
   }
-}
 
 resource "google_compute_instance" "haproxy" {
   name         = "haproxy"
@@ -181,8 +193,10 @@ resource "google_compute_instance" "ftp" {
       sed -i 's/anonymous_enable=NO/anonymous_enable=YES/' /etc/vsftpd.conf
       sed -i 's/local_enable=YES/#local_enable=YES/' /etc/vsftpd.conf
       sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
+      sed -i 's/listen=NO/listen=YES/' /etc/vsftpd.conf
+      sed -i 's/listen_ipv6=YES/listen_ipv6=NO/' /etc/vsftpd.conf
 
       systemctl enable vsftpd
-      systemctl start vsftpd
+      systemctl restart vsftpd
   EOS
 }
