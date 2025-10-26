@@ -15,6 +15,16 @@ resource "google_compute_instance" "web1" {
     }
   }
 
+
+  metadata_startup_script = <<-EOS
+      apt-get update -y
+      apt-get install -y apache2
+      systemctl enable apache2
+      systemctl start apache2
+
+      echo "<html><body><h1>Welcome to Web Instance 1</h1></body></html>" > /var/www/html/index.html
+    EOS
+
   network_interface {
     network    = "custom-vpc"
     subnetwork = "private-subnet"
@@ -37,6 +47,15 @@ resource "google_compute_instance" "web2" {
       image = "debian-cloud/debian-11"
     }
   }
+
+  metadata_startup_script = <<-EOS
+      apt-get update -y
+      apt-get install -y apache2
+      systemctl enable apache2
+      systemctl start apache2
+
+      echo "<html><body><h1>Welcome to Web Instance 2</h1></body></html>" > /var/www/html/index.html
+    EOS
 
   network_interface {
     network    = "custom-vpc"
