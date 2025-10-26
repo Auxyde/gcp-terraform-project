@@ -18,6 +18,7 @@ resource "google_compute_instance" "web1" {
 
   metadata_startup_script = <<-EOS
       apt-get update -y
+      apt-get install ftp -y
       apt-get install -y apache2
       systemctl enable apache2
       systemctl start apache2
@@ -51,6 +52,7 @@ resource "google_compute_instance" "web2" {
   metadata_startup_script = <<-EOS
       apt-get update -y
       apt-get install -y apache2
+      apt-get install ftp -y
       systemctl enable apache2
       systemctl start apache2
 
