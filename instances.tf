@@ -173,6 +173,10 @@ resource "google_compute_instance" "ftp" {
       apt-get update -y
       apt-get install -y vsftpd
 
+      sed -i 's/anonymous_enable=NO/anonymous_enable=YES/' /etc/vsftpd.conf
+      sed -i 's/local_enable=YES/#local_enable=YES/' /etc/vsftpd.conf
+      sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
+      
       systemctl enable vsftpd
       systemctl start vsftpd
   EOS
