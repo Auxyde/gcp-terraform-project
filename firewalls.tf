@@ -22,6 +22,18 @@ resource "google_compute_firewall" "ssh_from_bastion" {
   }
 }
 
+resource "google_compute_firewall" "bastion_to_haproxy_http" {
+  name    = "allow-http"
+  network = google_compute_network.vpc_network.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+  source_tags = ["bastion"]
+  target_tags = ["haproxy"]
+}
+
 resource "google_compute_firewall" "allow_icmp" {
   name    = "allow-icmp"
   network = google_compute_network.vpc_network.name
