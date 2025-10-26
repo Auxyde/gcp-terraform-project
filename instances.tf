@@ -161,9 +161,17 @@ resource "google_compute_instance" "ftp" {
     }
   }
 
-
   network_interface {
     network    = "custom-vpc"
     subnetwork = "private-subnet"
   }
+
+
+  metadata_startup_script = <<-EOS
+      apt-get update -y
+      apt-get install -y vsftpd
+
+      systemctl enable vsftpd
+      systemctl start vsftpd
+  EOS
 }
