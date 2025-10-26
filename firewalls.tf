@@ -47,3 +47,13 @@ resource "google_compute_firewall" "haproxy_to_web_http" {
     ports    = ["80"]
   }
 }
+resource "google_compute_firewall" "allow_icmp" {
+  name    = "allow-icmp"
+  network = google_compute_network.vpc_network.name
+
+  allow {
+    protocol = "icmp"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
