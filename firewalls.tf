@@ -31,8 +31,8 @@ resource "google_compute_firewall" "allow_ftp_web" {
     ports    = ["21"]
   }
 
-  source_tags = ["ftp"]
-  target_tags   = ["web"]
+  source_tags = ["web"]
+  target_tags   = ["ftp"]
 }
 
 resource "google_compute_firewall" "bastion_to_haproxy_http" {
