@@ -143,3 +143,27 @@ resource "google_compute_instance" "haproxy" {
       systemctl restart haproxy
     EOS
 }
+
+resource "google_compute_instance" "ftp" {
+  name         = "ftp"
+  machine_type = "e2-micro"
+  zone         = var.zone
+  tags         = ["ftp"]
+
+  allow_stopping_for_update = true
+
+  metadata = {
+    ssh-keys = "user:${file("~/.ssh/id_rsa.pub")}"
+  }
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+
+  network_interface {
+    network    = "custom-vpc"
+    subnetwork = "private-subnet"
+  }
+}
