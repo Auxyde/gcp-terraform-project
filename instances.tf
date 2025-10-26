@@ -29,6 +29,7 @@ resource "google_compute_instance" "web1" {
   network_interface {
     network    = "custom-vpc"
     subnetwork = "private-subnet"
+    network_ip = "10.0.2.10"
   }
 }
 
@@ -62,6 +63,7 @@ resource "google_compute_instance" "web2" {
   network_interface {
     network    = "custom-vpc"
     subnetwork = "private-subnet"
+    network_ip = "10.0.2.11"
   }
 }
 
@@ -86,6 +88,7 @@ resource "google_compute_instance" "bastion" {
   network_interface {
     network    = "custom-vpc"
     subnetwork = "public-subnet"
+    network_ip = "10.0.1.10"
     access_config {} 
   }
 }
@@ -107,6 +110,7 @@ resource "google_compute_instance" "haproxy" {
   network_interface {
     network    = "custom-vpc"
     subnetwork = "private-subnet"
+    network_ip = "10.0.2.20"
   }
 
   metadata = {
@@ -166,6 +170,7 @@ resource "google_compute_instance" "ftp" {
   network_interface {
     network    = "custom-vpc"
     subnetwork = "private-subnet"
+    network_ip = "10.0.2.30"
   }
 
 
@@ -176,7 +181,7 @@ resource "google_compute_instance" "ftp" {
       sed -i 's/anonymous_enable=NO/anonymous_enable=YES/' /etc/vsftpd.conf
       sed -i 's/local_enable=YES/#local_enable=YES/' /etc/vsftpd.conf
       sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
-      
+
       systemctl enable vsftpd
       systemctl start vsftpd
   EOS
