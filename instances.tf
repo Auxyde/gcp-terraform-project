@@ -104,7 +104,7 @@ resource "google_compute_instance" "haproxy" {
   
   network_interface {
     network    = "custom-vpc"
-    subnetwork = "public-subnet"
+    subnetwork = "private-subnet"
   }
 
   metadata = {
@@ -112,10 +112,10 @@ resource "google_compute_instance" "haproxy" {
   }
 
   metadata_startup_script = <<-EOS
-      apt-get update -y
-      apt-get install -y haproxy
+      sudo apt-get update -y
+      sudo apt-get install -y haproxy
 
-      cat >/etc/haproxy/  <<'CFG'
+      cat >/etc/haproxy/haproxy.cfg  <<'CFG'
         global
           log /dev/log local0
           maxconn 2048
